@@ -1,0 +1,14 @@
+<% content_for :page_title,  "Editer Emprunt" %>
+
+<%= render "form", emprunt: @emprunt %>
+
+<br>
+
+<div class="card">
+  <div class="card-body">
+    <div class="mb-10 container-fluid">
+      <%= link_to "Show this emprunt", @emprunt, class: "btn btn-outline-info mr-2" %>
+      <%= link_to "Back to emprunts", emprunts_path, class: "btn btn-outline-info mr-2" %>
+    </div>
+  </div>
+</div>

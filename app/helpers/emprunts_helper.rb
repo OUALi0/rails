@@ -1,0 +1,2 @@
+module EmpruntsHelper
+end

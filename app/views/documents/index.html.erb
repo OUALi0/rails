@@ -1,0 +1,59 @@
+<% content_for :page_title,  "Les Documents" %>
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+  <h1></h1>
+  <%= button_to "Ajouter Document", new_document_path, class:"btn btn-outline-primary bi bi-plus", :method => "get" %>
+</div>
+  <div class="mb-5 d-flex justify-content-betweeb">
+      <input id="search" class="form-control mr-sm-2" type="search" placeholder="Chercher par titre" aria-label="Search">
+      <button style="display:none" id="search_btn" class="btn btn-outline-primary" >Search</button>
+  </div>
+  <div id="documents">
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">type</th>
+          <th scope="col">Titre</th>
+          <th scope="col">isbn</th>
+          <th scope="col">Created</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @documents.each do |document| %>
+        <%= render document %>
+      <% end %>
+      </tbody>
+    </table>
+
+</div>
+
+
+
+
+<script>
+ $(document).ready(function(){
+  $("#search").val(<%$query%>)
+  let timeout;
+  $("#search").keyup(function(){
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+         let q = $("#search").val()
+    $.ajax({
+      type: "GET",
+      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+      url: "/searchDoc",
+      data: {query : q.trim()},
+      success: function(response) {
+              $('body').html(response);
+              $("#search").val(q)
+              $("#search").focus()
+        }
+      })
+    }, 400);
+    });
+
+});
+</script>

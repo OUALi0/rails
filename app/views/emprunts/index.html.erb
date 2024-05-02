@@ -1,0 +1,91 @@
+<% content_for :page_title,  "Les Emprunts" %>
+
+<div class="d-flex justify-content-between mb-5 mt-5">
+  <h1></h1>
+  <%= button_to "Ajouter Emprunt", new_emprunt_path, class:"btn btn-outline-primary bi bi-plus", :method => "get" %>
+</div>
+
+<h2>Document emprunts</h2>
+
+<div id="emprunts">
+  <table class="table mt-5">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Document ID</th>
+            <th scope="col">Titre</th>
+            <th scope="col">Adherent</th>
+            <th scope="col">Ajouté</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+      <% @emprunt_documents.each do |emprunt_document| %>
+        <tr>
+          <th scope="row">
+            <%= emprunt_document["emprunt_id"] %>
+          </th>
+          <th scope="row">
+            <%= emprunt_document["document_id"] %>
+          </th>
+          <td>
+            <%= emprunt_document["document_name"] %>
+          </td>
+
+          <td>
+            <%="#{emprunt_document["ad_nom"]} #{emprunt_document["ad_prenom"]} " %>
+          </td>
+          <td>
+            <%= Date.parse(emprunt_document["created_at"]).strftime("%Y-%m-%d %H:%M") %>
+          </td>
+
+          <td>
+            <%= link_to "",  emprunt_path(id:emprunt_document["emprunt_id"]), class:"btn btn-outline-primary bi bi-eye", :method => "get" %>
+          </td>
+        
+          </tr>
+        <% end %>
+        </tbody>
+  </table>
+
+  <h2 class="mb-5" >Ordinateur emprunts</h2>
+      <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Ordinateur ID</th>
+                <th scope="col">Nom Ordinateur</th>
+                <th scope="col">Adherent</th>
+                <th scope="col">Ajouté</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+          <% @emprunt_ordinateur.each do |emprunt_ordinateur| %>
+            <tr>
+              <th scope="row">
+                <%= emprunt_ordinateur["emprunt_id"] %>
+              </th>
+              <th scope="row">
+                <%= emprunt_ordinateur["materiel_id"] %>
+              </th>
+              <td>
+                <%= emprunt_ordinateur["materiel_name"] %>
+              </td>
+
+              <td>
+                <%="#{emprunt_ordinateur["ad_nom"]} #{emprunt_ordinateur["ad_prenom"]} " %>
+              </td>
+              <td>
+                <%= Date.parse(emprunt_ordinateur["created_at"]).strftime("%Y-%m-%d %H:%M") %>
+              </td>
+
+              <td>
+                <%= link_to "",  emprunt_path(id:emprunt_ordinateur["emprunt_id"]), class:"btn btn-outline-primary bi bi-eye", :method => "get" %>
+              </td>
+            
+              </tr>
+            <% end %>
+            </tbody>
+  </table>
+</div>

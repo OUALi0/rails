@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bibliotheque</title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= csrf_meta_tags %>
+    <!-- Bootstrap CSS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+  </head>
+
+  <body>
+  	<section class="hero is-primary is-medium">
+	  <!-- Hero head: will stick at the top -->
+	  <div class="hero-head">
+	    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+	      <div class="container-fluid">
+			<%= link_to 'Bibliotheque', root_path, class: "navbar-brand" %>
+			<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+				<% if @user %>
+						<%= link_to "Documents", documents_path, class:"btn btn-outline-dark" %>
+						<%= link_to "Auteurs", auteurs_path, class:"btn btn-outline-dark" %>
+						<%= link_to "Adherents", adherents_path, class:"btn btn-outline-dark" %>
+						<%= link_to "Emprunts", emprunts_path, class:"btn btn-outline-dark" %>
+						<%= link_to "Materiels", materiels_path, class:"btn btn-outline-dark" %>
+						<%= link_to "Se deconnecter", logout_path, method: :delete, class:"btn btn-outline-dark" %>
+				<% else %>
+				    <%= link_to "Se connecter", signin_path, class:"btn btn-outline-dark" %>
+				    <%= link_to "S'inscrire", inscription_path, class:"btn btn-outline-dark" %>
+				<% end %>
+			</div>
+	        </div>
+	    </nav>
+	  </div>
+
+	  <!-- Hero content: will be in the middle -->
+	  <div class="hero-body">
+	    <div class="container has-text-centered">
+	      <h1 class="title">
+	        <%= yield :page_title %>
+	      </h1>
+	    </div>
+	  </div>
+	</section>
+    <%= yield %>
+  </body>
+</html>

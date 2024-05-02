@@ -1,0 +1,16 @@
+<div class="section">
+  <%= simple_form_for @adherent do |f| %>
+    <div class="field">
+      <div class="control">
+        <%= f.input :nom, input_html: { class: 'input' }, wrapper: false, label_html: { class: 'label' } %>
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <%= f.input :prenom, input_html: { class: 'input' }, wrapper: false, label_html: { class: 'label' } %>
+      </div>
+    </div>
+    <%= f.button :submit, class: "button is-primary" %>
+  <% end %>
+</div>
+

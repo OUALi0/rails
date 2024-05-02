@@ -1,0 +1,2 @@
+class EmpruntMateriels < ApplicationRecord
+end

@@ -1,0 +1,20 @@
+
+
+<tr id="<%= dom_id adherent %>">
+  <th scope="row">
+    <%= adherent.id %>
+  </th>
+  <td>
+    <%= adherent.nom %>
+  </td>
+  <td>
+    <%= adherent.prenom %>
+  </td>
+  <td>
+    <%= adherent.created_at.strftime("%Y-%m-%d %H:%M") %>
+  </td>
+  <td>
+    <%= button_to "", adherent, class:"btn btn-outline-primary bi bi-eye", :method => "get" %>
+  </td>
+</tr>
+

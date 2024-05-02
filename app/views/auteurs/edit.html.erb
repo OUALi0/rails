@@ -1,0 +1,13 @@
+<% content_for :page_title, @auteur.nom_prenom %>
+
+<%= render "form", auteur: @auteur %>
+
+<br>
+<div class="card">
+  <div class="card-body">
+    <div class="mb-10 container-fluid">
+      <%= link_to "Show this auteur", @auteur, class: "btn btn-outline-info mr-2" %> 
+      <%= link_to "Back to auteurs", auteurs_path, class: "btn btn-outline-info mr-2" %>
+    </div>
+  </div>
+</div>

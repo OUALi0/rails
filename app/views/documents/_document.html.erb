@@ -1,0 +1,22 @@
+<tr id="<%= dom_id document %>">
+  <th scope="row">
+    <%= document.id %>
+  </th>
+  <td>
+    <%= document.doc_type %>
+  </td>
+  <td>
+    <%= document.titre %>
+  </td>
+  <td>
+    <%= document.isbn %>
+  </td>
+  <td>
+    <%= document.created_at.strftime("%Y-%m-%d %H:%M") %>
+  </td>
+  <td>
+    <%= button_to "", document, class:"btn btn-outline-primary bi bi-eye", :method => "get" %>
+  </td>
+</tr>
+
+

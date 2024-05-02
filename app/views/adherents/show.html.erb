@@ -1,0 +1,47 @@
+<% content_for :page_title, @adherent.nom + " " + @adherent.prenom %>
+
+<section class="section">
+	<div class="container">
+		<nav class="level">
+		  <!-- Left side -->
+		  <div class="level-left">
+		    <p class="level-item">
+		        <strong>Actions</strong>
+		    </p>
+		  </div>
+		  <!-- Right side -->
+		  <div class="level-right">
+		  	<p class="level-item">
+		    	<%= link_to "Edit", edit_adherent_path(@adherent), class:"button" %>
+		  	</p>
+        <p class="level-item">
+          <%= button_to "Delete", @adherent, method: :delete,  class:"button is-danger" %>
+        </p>
+		  </div>
+		</nav>
+		<hr/>
+    <div class="d-flex w-200 mb-2">
+        <div class="w-25">ID:</div>
+        <div><strong><%= @adherent.id %></strong> </div>
+    </div>
+
+    <div class="d-flex w-200 mb-2">
+      <div class="w-25">Nom:</div>
+      <div><strong><%= @adherent.nom %></strong> </div>
+    </div>
+    <div class="d-flex w-200 mb-2">
+      <div class="w-25">Prenom:</div>
+      <div><strong><%= @adherent.prenom %></strong> </div>
+    </div>
+	</div>
+  <div class="card">
+  <div class="card-body">
+    <div class="mb-10 container-fluid">
+      <%= link_to "Back to adherents", adherents_path, class: "btn btn-outline-info mr-2" %>
+    </div>
+  </div>
+</div>
+</section>
+
+
+

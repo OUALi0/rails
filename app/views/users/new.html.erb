@@ -1,0 +1,33 @@
+<% content_for :page_title,  "Inscription" %>
+<div class="container">
+<%= form_for @user, url: inscription_path do |f| %>
+    <% if @user.errors.any?%>
+    <div id="error_explanation">
+        <div class="alert alert-danger">
+            The form contains <%= pluralize(@user.errors.count, "error") %>.</div>
+        <ul>
+            <% @user.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+        </ul>
+    </div>
+    <%end%>
+  <div class="mb-3">
+    <%= f.label :name%>
+    <%= f.text_field :name, class: "form-control" , placeholder: "oualid"%>
+  </div>
+  <div class="mb-3">
+    <%= f.label :email %>
+    <%= f.text_field :email, class: 'form-control', placeholder: "oualid@gmail.com" %>
+  </div>
+  <div class="mb-3">
+    <%= f.label :password %>
+    <%= f.password_field :password, class: 'form-control', placeholder: "password" %>
+  </div>
+  <div class="mb-3">
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation, class: 'form-control', placeholder: "password" %>
+  </div>
+    <%= f.submit "S'inscrire", class: 'btn btn-primary' %>
+<% end %>
+</div>

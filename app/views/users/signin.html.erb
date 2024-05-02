@@ -1,0 +1,25 @@
+<% content_for :page_title,  "Se Connecter" %>
+<div class="container">
+  <%= form_with model: @user, url: signin_path do |f| %>
+    <% if @user && @user.errors.any? %>
+    <div id="error_explanation">
+        <div class="alert alert-danger">
+            The form contains <%= pluralize(@user.errors.count, "error") %>.</div>
+        <ul>
+            <% @user.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+        </ul>
+    </div>
+    <%end%>
+    <div class="mb-3">
+      <%= f.label :email %>
+      <%= f.text_field :email, class: 'form-control', placeholder: "oualid@gmail.com" %>
+    </div>
+    <div class="mb-3">
+      <%= f.label :password %>
+      <%= f.password_field :password, class: 'form-control', placeholder: "password" %>
+    </div>
+      <%= f.submit "Sign In", class: 'btn btn-primary' %>
+  <% end %>
+<div>

@@ -1,0 +1,18 @@
+<tr id="<%= dom_id auteur %>">
+  <th scope="row">
+    <%= auteur.id %>
+  </th>
+  <td>
+    <%= auteur.nom_prenom %>
+  </td>
+  <td>
+    <%= auteur.document_id ? auteur.document_id : '-' %>
+  </td>
+  <td>
+    <%= auteur.created_at.strftime("%Y-%m-%d %H:%M") %>
+  </td>
+  <td>
+    <%= button_to "", auteur, class:"btn btn-outline-primary bi bi-eye", :method => "get" %>
+  </td>
+</tr>
+

@@ -1,0 +1,15 @@
+<% content_for :page_title,  "Ajouter Emprunt" %>
+
+<%= render "form", emprunt: @emprunt %>
+
+<br>
+
+<div class="card">
+  <div class="card-body">
+    <div class="mb-10 container-fluid">
+      <%= link_to "Back to emprunts", emprunts_path, class: "btn btn-outline-info mr-2" %>
+    </div>
+  </div>
+</div>
+
+

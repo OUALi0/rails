@@ -1,0 +1,12 @@
+<% content_for :page_title, @adherent.nom + " " + @adherent.prenom %>
+
+<%= render "form", adherent: @adherent %>
+<br>
+<div class="card">
+  <div class="card-body">
+    <div class="mb-10 container-fluid">
+      <%= link_to "Show this adherent", @adherent, class: "btn btn-outline-info mr-2" %> 
+      <%= link_to "Back to adherents", adherents_path, class: "btn btn-outline-info mr-2" %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="section">
+  <%= simple_form_for @emprunt do |f| %>
+    <div class="field">
+      <div id="test" class="input-group mb-3">
+        <%= f.select(:adherent_id, options_for_select( [["Selectioner un adherent", 0]] +  @adherents.map{ |adherent| ["#{adherent.nom} #{adherent.prenom}", Integer(adherent.id)]}), class:"per") %>
+      </div>
+    </div>
+
+    <select id="auth_select" class="custom-select" aria-label="Default select example">
+      <option value="0">Choisir le type demprunts</option>
+      <option value="1">Ordinateur</option>
+      <option value="2">Document</option>
+    </select>
+
+    <div class="field">
+      <div class="control">
+        <% if @is_ordinateur %>
+        <div class="input-group mb-3 mt-3">
+            <%= select_tag(:mat_id, options_for_select( [["Selectioner un ordinateur", 0]] +  @ordinateurs.map{ |ordinateur| ["#{ordinateur.nom}", ordinateur.id]}), class:"custom-select") %>
+        </div>
+        <% end %>
+      </div>
+    </div><br>
+
+    <div class="field">
+      <div class="control">
+        <% if @is_document %>
+          <div class="input-group mb-3 mt-3">
+            <%= select_tag(:doc_id, options_for_select( [["Selectioner un document", 0]] +  @documents.map{ |document| ["#{document.doc_type.capitalize()} - #{document.titre}", document.id]}), class:"custom-select form-select form-select-lg") %>
+          </div>
+        <% end %>
+      </div>
+    </div><br>
+    <%= f.button :submit, class: "button is-primary" %>
+  <% end %>
+</div>
+
+<script>
+
+ $(document).ready(function(){
+
+  $("#auth_select").change(function($event){
+    let selected = $("#auth_select").find(":selected").text()
+    let selected_ad = $(".per").find(":selected").val()
+    if(selected == 'Ordinateur' || selected == 'Document'){
+      $.ajax({
+      type: "GET",
+      beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+      url: "/emprunts/new",
+      data: {type : selected},
+      success: function(response) {
+              $('body').html(response);
+              $("#auth_select").val($event.target.value);
+              $(".per").val(selected_ad)
+        }
+      })
+    }
+  });
+ })
+</script>
