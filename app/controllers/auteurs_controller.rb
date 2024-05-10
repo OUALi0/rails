@@ -6,6 +6,7 @@ class AuteursController < ApplicationController
   def index
     if(params[:query].nil?)
       $auteurs = Auteur.all
+      @documents = Document.all
       return
     end
 
@@ -13,6 +14,7 @@ class AuteursController < ApplicationController
     $auteurs = search(query)
   end
   def search(query)
+    @documents = Document.all
     res = Auteur.all.where("lower(nom_prenom) LIKE :search", search:"%#{query}%")
     return res
   end
@@ -35,7 +37,7 @@ class AuteursController < ApplicationController
   # POST /auteurs or /auteurs.json
   def create
     @auteur = Auteur.new(auteur_params)
-
+    @documents = Document.all
     respond_to do |format|
       if @auteur.save
         format.html { redirect_to auteur_url(@auteur), notice: "Auteur was successfully created." }
@@ -50,6 +52,7 @@ class AuteursController < ApplicationController
 
   # PATCH/PUT /auteurs/1 or /auteurs/1.json
   def update
+    @documents = Document.all
     respond_to do |format|
       if @auteur.update(auteur_params)
         format.html { redirect_to auteur_url(@auteur), notice: "Auteur was successfully updated." }
@@ -74,6 +77,7 @@ class AuteursController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_auteur
+      @documents = Document.all
       @auteur = Auteur.find(params[:id])
     end
 

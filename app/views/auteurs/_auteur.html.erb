@@ -6,7 +6,10 @@
     <%= auteur.nom_prenom %>
   </td>
   <td>
-    <%= auteur.document_id ? auteur.document_id : '-' %>
+    <strong><% @documents.each do |document| %>
+            <%= "#{document.titre}" %>
+            <% end %>
+    </strong>
   </td>
   <td>
     <%= auteur.created_at.strftime("%Y-%m-%d %H:%M") %>

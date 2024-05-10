@@ -35,7 +35,6 @@ class AdherentsController < ApplicationController
   # POST /adherents or /adherents.json
   def create
     @adherent = Adherent.new(adherent_params)
-
     respond_to do |format|
       if @adherent.save
         format.html { redirect_to adherents_url, notice: "Adherent was successfully created." }

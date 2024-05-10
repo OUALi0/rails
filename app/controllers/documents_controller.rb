@@ -23,6 +23,7 @@ class DocumentsController < ApplicationController
   # GET /documents/new
   def new
     @is_edit = false
+    @auteurs = getAuteurs()
     @document = Document.new
   end
 

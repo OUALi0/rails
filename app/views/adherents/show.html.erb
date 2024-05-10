@@ -6,16 +6,14 @@
 		  <!-- Left side -->
 		  <div class="level-left">
 		    <p class="level-item">
-		        <strong>Actions</strong>
+		        <strong>Votre Profil</strong>
 		    </p>
 		  </div>
 		  <!-- Right side -->
 		  <div class="level-right">
 		  	<p class="level-item">
-		    	<%= link_to "Edit", edit_adherent_path(@adherent), class:"button" %>
-		  	</p>
-        <p class="level-item">
-          <%= button_to "Delete", @adherent, method: :delete,  class:"button is-danger" %>
+		    	<%= link_to "Edit", edit_adherent_path(@adherent), class:"btn btn-info" %>
+          <%= button_to "Delete", @adherent, method: :delete,  class:"btn btn-danger" %>
         </p>
 		  </div>
 		</nav>
