@@ -6,7 +6,6 @@
 </div>
 
 <h2>Document emprunts</h2>
-
 <div id="emprunts">
   <table class="table mt-5">
         <thead>
@@ -89,3 +88,38 @@
             </tbody>
   </table>
 </div>
+<%= button_to "Export To CSV", "#", id: "exportBtn", class: "btn btn-primary", method: :get %>
+
+<script>
+  document.getElementById("exportBtn").addEventListener("click", function() {
+    // Create an array to store the CSV data
+    let csvData = [];
+    // Add the CSV header
+    csvData.push(["ID","DOCUMENT_NAME", "ADHERENT_NOM", "ADHERENT_PRENOM", "Created"]);
+
+    // Iterate over each emprunt to get its information
+    <% if @emprunt_documents.present? %> 
+      <% @emprunt_documents.each do |emprunt_document| %>
+        csvData.push(["<%= emprunt_document["emprunt_id"] %>", "<%= emprunt_document["document_name"] %>", "<%= emprunt_document["ad_nom"] %>", "<%= emprunt_document["ad_prenom"] %>", "<%= emprunt_document["created_at"] %>"]);
+      <% end %>
+    <% end %>
+    <% if @emprunt_ordinateur.present? %> 
+      <% @emprunt_ordinateur.each do |emprunt_ordinateur| %>
+        csvData.push(["<%= emprunt_ordinateur["emprunt_id"] %>", "<%= emprunt_ordinateur["materiel_name"] %>", "<%= emprunt_ordinateur["ad_nom"] %>", "<%= emprunt_ordinateur["ad_prenom"] %>", "<%= emprunt_ordinateur["created_at"] %>"]);
+      <% end %>
+    <% end %>
+
+    // Convert the array into CSV string
+    let csvContent = "data:text/csv;charset=utf-8," + csvData.map(row => row.join(",")).join("\n");
+
+    // Create an anchor element to download the CSV file
+    let encodedUri = encodeURI(csvContent);
+    let link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "emprunts.csv");
+    document.body.appendChild(link);
+
+    // Click the link to download the CSV file
+    link.click();
+  });
+</script>

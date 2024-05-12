@@ -3,7 +3,6 @@ class DocumentsController < ApplicationController
   $document_auteurs = []
   $query = ''
 
-  # GET /documents or /documents.json
   def index
     if(params[:query].nil?)
       @documents = Document.all
@@ -14,36 +13,29 @@ class DocumentsController < ApplicationController
     @documents = search(query)
   end
 
-  # GET /documents/1 or /documents/1.json
   def show
     id = request.url.split("/")[4]
     @auteurs = getDocumentAuteurs(id)
   end
 
-  # GET /documents/new
   def new
     @is_edit = false
     @auteurs = getAuteurs()
     @document = Document.new
   end
 
-  # GET /documents/1/edit
   def edit
     @is_edit = true
     @auteurs = getAuteurs()
   end
-
   def getDocumentAuteurs(id)
     document_auteurs = Auteur.all.joins("LEFT JOIN document_auteurs ON auteurs.id=document_auteurs.auteur_id").where("document_auteurs.document_id=:id", id: Integer(id))
-    # ids = document_auteurs.map{ |auteur| auter.aut}
     return document_auteurs
   end
 
   def getAuteurs()
     return Auteur.all
   end
-
-  # POST /documents or /documents.json
   def create
     @document = Document.new(document_params)
     respond_to do |format|
@@ -61,13 +53,9 @@ class DocumentsController < ApplicationController
     return res
   end
 
-
-  # PATCH/PUT /documents/1 or /documents/1.json
   def update
     respond_to do |format|
-
       id = params[:auteur_id]
-     
       if(id)
         inserts = [@document.id, id]
         sql = "INSERT INTO document_auteurs('document_id', 'auteur_id') VALUES(#{inserts.join(", ")})"
@@ -82,8 +70,6 @@ class DocumentsController < ApplicationController
       end
     end
   end
-
-  # DELETE /documents/1 or /documents/1.json
   def destroy
     @document.destroy
 
@@ -94,12 +80,9 @@ class DocumentsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_document
       @document = Document.find(params[:id])
     end
-
-    # Only allow a list of trusted parameters through.
     def document_params
       params.require(:document).permit(:doc_type, :titre, :isbn)
     end

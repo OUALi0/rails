@@ -1,14 +1,8 @@
 require "test_helper"
-
 class UserTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
-
   def setup
     @user =User.new(name: "prenom1 Nom1" ,email: "prenom1@example.com", password: "password", password_confirmation: "password")
   end
-
 
   test "nom doit etre present" do
     @user.name=""

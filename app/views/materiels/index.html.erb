@@ -23,3 +23,27 @@
       </tbody>
     </table>
 </div>
+<%= button_to "Export To CSV", "#", id: "exportBtn", class: "btn btn-primary", method: :get %>
+
+<script>
+  document.getElementById("exportBtn").addEventListener("click", function() {
+    // Create an array to store the CSV data
+    let csvData = [];
+    // Add the CSV header
+    csvData.push(["ID", "TYPE", "NOM","Created"]);
+    // Iterate over each materiel to get its information
+    <% @materiels.each do |materiel| %>
+      csvData.push(["<%= materiel.id %>", "<%= materiel.mat_type %>", "<%= materiel.nom%>", "<%= materiel.created_at %>"]);
+    <% end %>
+    // Convert the array into CSV string
+    let csvContent = "data:text/csv;charset=utf-8," + csvData.map(row => row.join(",")).join("\n");
+    // Create an anchor element to download the CSV file
+    let encodedUri = encodeURI(csvContent);
+    let link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "materiels.csv");
+    document.body.appendChild(link);
+    // Click the link to download the CSV file
+    link.click();
+  });
+</script>

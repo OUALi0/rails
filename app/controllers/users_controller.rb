@@ -18,12 +18,9 @@ class UsersController < ApplicationController
       session[:user_id] = nil
       redirect_to signin_path, notice: "Vous êtes déconnecté!"
     end
-  
     def signin
-      
-  
     end
-  
+    
     def login
       @user = User.find_by(email: params[:email])
       if @user && @user.authenticate(params[:password])
@@ -34,11 +31,9 @@ class UsersController < ApplicationController
         render :signin
       end
     end
-
     private
     def user_params
         params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
-      
   end
   

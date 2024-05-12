@@ -21,12 +21,8 @@ Rails.application.routes.draw do
 
   
 
-
   get "/searchAd" => "adherents#index", :as => :search_ad 
   get "/searchDoc" => "documents#index", :as => :search_doc 
   get "/searchAuth" => "auteurs#index", :as => :search_auth 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
-  # root "articles#index"
 end

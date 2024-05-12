@@ -1,1 +1,1 @@
-json.partial! "auteurs/auteur", auteur: @auteur
+json.partial! "documents/document", document: @document

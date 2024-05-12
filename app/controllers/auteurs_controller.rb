@@ -2,14 +2,12 @@ class AuteursController < ApplicationController
   before_action :set_auteur, only: %i[ show edit update destroy ]
   $auteurs = []
   $query = ''
-  # GET /auteurs or /auteurs.json
   def index
     if(params[:query].nil?)
       $auteurs = Auteur.all
       @documents = Document.all
       return
     end
-
     query = params[:query]
     $auteurs = search(query)
   end
@@ -18,23 +16,17 @@ class AuteursController < ApplicationController
     res = Auteur.all.where("lower(nom_prenom) LIKE :search", search:"%#{query}%")
     return res
   end
-  # GET /auteurs/1 or /auteurs/1.json
   def show
     @documents = Document.all
   end
-
-  # GET /auteurs/new
   def new
     @auteur = Auteur.new
     @documents = Document.all
   end
-
-  # GET /auteurs/1/edit
   def edit
     @documents = Document.all
   end
 
-  # POST /auteurs or /auteurs.json
   def create
     @auteur = Auteur.new(auteur_params)
     @documents = Document.all
@@ -49,8 +41,6 @@ class AuteursController < ApplicationController
     end
   end
 
-
-  # PATCH/PUT /auteurs/1 or /auteurs/1.json
   def update
     @documents = Document.all
     respond_to do |format|
@@ -64,7 +54,6 @@ class AuteursController < ApplicationController
     end
   end
 
-  # DELETE /auteurs/1 or /auteurs/1.json
   def destroy
     @auteur.destroy
 
@@ -75,13 +64,11 @@ class AuteursController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_auteur
       @documents = Document.all
       @auteur = Auteur.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def auteur_params
       params.require(:auteur).permit(:nom_prenom)
     end
