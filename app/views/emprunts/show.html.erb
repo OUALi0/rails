@@ -1,69 +1,117 @@
-<% content_for :page_title, @emp[0]["document_name"] %>
+<% content_for :page_title do %>
+    <% if @emprunt.documents.any? %>
+      <% @emprunt.documents.each do |document| %>
+        <%= document.titre %>
+      <% end %>
+    <% else %>
+      No Documents
+    <% end %>
+  <% end %>
 
-<section class="section">
-	<div class="container">
-		<nav class="level">
-		  <!-- Left side -->
-		  <div class="level-left">
-		    <p class="level-item">
-		        <strong>Actions</strong>
-		    </p>
-		  </div>
-		  <!-- Right side -->
-		  <div class="level-right">
-		  	<p class="level-item">
-		    	<%= link_to "Edit", edit_emprunt_path(@emprunt), class:"button" %>
-		  	</p>
-        <p class="level-item">
-          <%= button_to "Delete", @emprunt, method: :delete,  class:"button is-danger" %>
-        </p>
-		  </div>
-		</nav>
-		<hr/>
-    <div class="d-flex w-200 mb-2">
+  <section class="section">
+    <div class="container">
+      <nav class="level">
+        <!-- Left side -->
+        <div class="level-left">
+          <p class="level-item">
+            <strong>Actions</strong>
+          </p>
+        </div>
+        <!-- Right side -->
+        <div class="level-right">
+          <p class="level-item">
+            <%= link_to "Edit", edit_emprunt_path(@emprunt), class: "button" %>
+          </p>
+          <p class="level-item">
+            <%= button_to "Delete", @emprunt, method: :delete, class: "button is-danger" %>
+          </p>
+        </div>
+      </nav>
+      <hr/>
+
+      <div class="d-flex w-200 mb-2">
         <div class="w-25">Emprunt ID:</div>
-        <div><strong><%=  @emp[0]["emprunt_id"] %></strong> </div>
-    </div>
+        <div><strong>
+          <%= @emprunt.id %>
+        </strong></div>
+      </div>
 
-    <div class="d-flex w-200 mb-2">
-      <div class="w-25">Adherent ID:</div>
-        <div><strong><%= @emp[0]["adherent_id"] %></strong> </div>
-    </div>
+      <div class="d-flex w-200 mb-2">
+        <div class="w-25">Document ISBN:</div>
+        <div><strong>
+          <% if @emprunt.documents.any? %>
+            <% @emprunt.documents.each do |document| %>
+              <%= "#{document.isbn}" %>
+            <% end %>
+          <% else %>
+            No documents
+          <% end %>
+        </strong></div>
+      </div>
 
-    <div class="d-flex w-200 mb-2">
-      <div class="w-25">Nom et Prenom:</div>
-      <div><strong><%= @emp[0]["ad_nom"]+" "+@emp[0]["ad_prenom"]  %></strong> </div>
-    </div>
+      <div class="d-flex w-200 mb-2">
+        <div class="w-25">Titre:</div>
+        <div><strong>
+          <% if @emprunt.documents.any? %>
+            <% @emprunt.documents.each do |document| %>
+              <%= "#{document.titre}" %>
+            <% end %>
+          <% else %>
+            No documents
+          <% end %>
+        </strong></div>
+      </div>
 
-     <div class="d-flex w-200 mb-2">
-      <% if @is_ordinateur%>
-        <div class="d-flex w-100 mb-2">
-          <div class="w-25">Ordinateur:</div>
-          <div><strong><% @materiels.each do |materiel| %>
-            <%= "#{materiel.nom}" %>
-            <% end %></strong>
+      <div class="d-flex w-200 mb-2">
+        <div class="w-25">Adherent ID:</div>
+        <div><strong>
+          <% adherent = Adherent.find_by(id: @emprunt.adherent_id) %>
+          <% if adherent %>
+            <%= adherent.id %>
+          <% else %>
+            Adherent not found
+          <% end %>
+        </strong></div>
+      </div>
+
+      <div class="d-flex w-200 mb-2">
+        <div class="w-25">Nom et Prenom:</div>
+        <div><strong>
+          <% adherent = Adherent.find_by(id: @emprunt.adherent_id) %>
+          <% if adherent %>
+            <%= adherent.nom + " " + adherent.prenom %>
+          <% else %>
+            Adherent not found
+          <% end %>
+        </strong></div>
+      </div>
+
+      <div class="d-flex w-200 mb-2">
+        <div class="w-25">Ordinateur:</div>
+        <div><strong>
+          <% if @emprunt.materiels.any? %>
+            <% @emprunt.materiels.each do |materiel| %>
+              <%= "#{materiel.nom}" %>
+            <% end %>
+          <% else %>
+            No Materiel
+          <% end %>
+        </strong></div>
+      </div>
+
+      <div class="d-flex w-200 mb-2">
+        <div class="w-25">Emprunté:</div>
+        <div><strong>
+          <%= @emprunt.created_at.strftime("%Y-%m-%d %H:%M") %>
+        </strong></div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="mb-10 container-fluid">
+            <%= link_to "Back to emprunts", emprunts_path, class: "btn btn-outline-info" %>
           </div>
         </div>
-      <% end %>
-      <% if @is_document%>
-        <div><strong><% @documents.each do |document| %>
-            <%= "#{document.titre}" %>
-            <% end %></strong>
-        </div>
-      <% end %>
-    </div>
-    
-    <div class="d-flex w-200 mb-2">
-      <div class="w-25">Emprunté:</div>
-        <div><strong> <%= Date.parse(@emp[0]["created_at"]).strftime("%Y-%m-%d %H:%M") %></strong> </div>
       </div>
-	  </div><br>
-  <div class="card">
-  <div class="card-body">
-    <div class="mb-10 container-fluid">
-      <%= link_to "Back to emprunts", emprunts_path, class:"btn btn-outline-info" %>
     </div>
-  </div>
-</div>
-</section>
-
+  </section>

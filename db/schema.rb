@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_27_213154) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_18_185049) do
   create_table "adherents", force: :cascade do |t|
     t.string "nom"
     t.string "prenom"
@@ -20,14 +20,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_27_213154) do
 
   create_table "auteurs", force: :cascade do |t|
     t.string "nom_prenom"
-    t.integer "document_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "document_auteurs", force: :cascade do |t|
-    t.integer "document_id"
-    t.integer "auteur_id"
+  create_table "auteurs_documents", id: false, force: :cascade do |t|
+    t.integer "auteur_id", null: false
+    t.integer "document_id", null: false
   end
 
   create_table "documents", force: :cascade do |t|
@@ -38,20 +37,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_27_213154) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "emprunt_documents", force: :cascade do |t|
-    t.integer "emprtunt_id"
-    t.integer "document_id"
-  end
-
-  create_table "emprunt_materiels", force: :cascade do |t|
-    t.integer "emprtunt_id"
-    t.integer "materiel_id"
+  create_table "documents_emprunts", id: false, force: :cascade do |t|
+    t.integer "emprunt_id", null: false
+    t.integer "document_id", null: false
   end
 
   create_table "emprunts", force: :cascade do |t|
     t.string "adherent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "emprunts_materiels", id: false, force: :cascade do |t|
+    t.integer "emprunt_id", null: false
+    t.integer "materiel_id", null: false
   end
 
   create_table "materiels", force: :cascade do |t|

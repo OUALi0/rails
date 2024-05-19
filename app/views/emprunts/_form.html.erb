@@ -5,7 +5,6 @@
         <%= f.select(:adherent_id, options_for_select( [["Selectioner un adherent", 0]] +  @adherents.map{ |adherent| ["#{adherent.nom} #{adherent.prenom}", Integer(adherent.id)]}), class:"per") %>
       </div>
     </div>
-
     <select id="auth_select" class="custom-select" aria-label="Default select example">
       <option value="0">Choisir le type demprunts</option>
       <option value="1">Ordinateur</option>
@@ -16,7 +15,7 @@
       <div class="control">
         <% if @is_ordinateur %>
         <div class="input-group mb-3 mt-3">
-            <%= select_tag(:mat_id, options_for_select( [["Selectioner un ordinateur", 0]] +  @ordinateurs.map{ |ordinateur| ["#{ordinateur.nom}", ordinateur.id]}), class:"custom-select") %>
+            <%= select_tag(:materiel_id, options_for_select( [["Selectioner un ordinateur", 0]] +  @materiels.map{ |materiel| ["#{materiel.nom}", materiel.id]}), class:"custom-select") %>
         </div>
         <% end %>
       </div>
@@ -26,7 +25,7 @@
       <div class="control">
         <% if @is_document %>
           <div class="input-group mb-3 mt-3">
-            <%= select_tag(:doc_id, options_for_select( [["Selectioner un document", 0]] +  @documents.map{ |document| ["#{document.doc_type.capitalize()} - #{document.titre}", document.id]}), class:"custom-select form-select form-select-lg") %>
+            <%= select_tag(:document_id, options_for_select( [["Selectioner un document", 0]] +  @documents.map{ |document| ["#{document.doc_type.capitalize()} - #{document.titre}", document.id]}), class:"custom-select form-select form-select-lg") %>
           </div>
         <% end %>
       </div>

@@ -36,6 +36,8 @@
 </div>
 
 <%= button_to "Export To CSV", "#", id: "exportBtn", class: "btn btn-primary", method: :get %>
+<br/>
+<%= link_to "Import from CSV",   adherent_import_csv_path(format: :csv), class: "btn btn-success", style: "margin-bottom: 4px", data: { "mdb-ripple-init": true } %>
 
 <script>
   document.getElementById("exportBtn").addEventListener("click", function() {

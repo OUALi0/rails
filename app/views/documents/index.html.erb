@@ -13,10 +13,10 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">ID</th>
           <th scope="col">type</th>
           <th scope="col">Titre</th>
           <th scope="col">isbn</th>
+          <th scope="col">Auteur</th>
           <th scope="col">Created</th>
           <th scope="col">Actions</th>
         </tr>
@@ -30,15 +30,23 @@
 
 </div>
 <%= button_to "Export To CSV", "#", id: "exportBtn", class: "btn btn-primary", method: :get %>
+<br/>
+<%= link_to "Import from CSV",   document_import_csv_path(format: :csv), class: "btn btn-success", style: "margin-bottom: 4px", data: { "mdb-ripple-init": true } %>
 <script>
   document.getElementById("exportBtn").addEventListener("click", function() {
     // Create an array to store the CSV data
     let csvData = [];
     // Add the CSV header
-    csvData.push(["ID", "TYPE", "TITRE", "ISBN","Created"]);
+    csvData.push(["ID", "TYPE", "TITRE", "ISBN","Auteur","Created"]);
     // Iterate over each document to get its information
     <% @documents.each do |document| %>
-      csvData.push(["<%= document.id %>", "<%= document.doc_type %>", "<%= document.titre %>", "<%= document.isbn %>", "<%= document.created_at %>"]);
+      <% if document.auteurs.any? %>
+        <% document.auteurs.each do |auteur| %>
+          csvData.push(["<%= document.id %>", "<%= document.doc_type %>", "<%= document.titre %>", "<%= document.isbn %>", "<%= auteur.nom_prenom %>", "<%= document.created_at %>"]);
+        <% end %>
+      <% else %>
+        csvData.push(["<%= document.id %>", "<%= document.doc_type %>", "<%= document.titre %>", "<%= document.isbn %>", "No documents", "<%= document.created_at %>"]);
+      <% end %>
     <% end %>
 
     // Convert the array into CSV string

@@ -1,2 +1,0 @@
-class EmpruntDocuments < ApplicationRecord
-end

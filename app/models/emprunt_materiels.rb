@@ -1,2 +1,0 @@
-class EmpruntMateriels < ApplicationRecord
-end

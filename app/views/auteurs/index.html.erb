@@ -33,16 +33,25 @@
 
 </div>
 <%= button_to "Export To CSV", "#", id: "exportBtn", class: "btn btn-primary", method: :get %>
+<br/>
+<%= link_to "Import from CSV",   auteur_import_csv_path(format: :csv), class: "btn btn-success", style: "margin-bottom: 4px", data: { "mdb-ripple-init": true } %>
 
 <script>
   document.getElementById("exportBtn").addEventListener("click", function() {
     // Create an array to store the CSV data
     let csvData = [];
     // Add the CSV header
-    csvData.push(["ID", "TYPE", "TITRE", "ISBN","Created"]);
+    csvData.push(["ID", "Full Name","Document"]);
     // Iterate over each auteur to get its information
+    
     <% $auteurs.each do |auteur| %>
-      csvData.push(["<%= auteur.id %>", "<%= auteur.nom_prenom  %>"]);
+      <% if auteur.documents.any? %>
+        <% auteur.documents.each do |document| %> 
+          csvData.push(["<%= auteur.id %>", "<%= auteur.nom_prenom %>", "<%= document.titre %>"]);
+        <% end %>
+      <% else %>
+        csvData.push(["<%= auteur.id %>", "<%= auteur.nom_prenom %>", "No documents"]);
+      <% end %>
     <% end %>
 
     // Convert the array into CSV string

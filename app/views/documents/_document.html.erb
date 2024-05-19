@@ -1,7 +1,4 @@
 <tr id="<%= dom_id document %>">
-  <th scope="row">
-    <%= document.id %>
-  </th>
   <td>
     <%= document.doc_type %>
   </td>
@@ -10,6 +7,15 @@
   </td>
   <td>
     <%= document.isbn %>
+  </td>
+  <td>
+    <% if document.auteurs.any? %>
+      <% document.auteurs.each do |auteur| %>
+        <%= "#{auteur.nom_prenom }, " %>
+      <% end %>
+    <% else %>
+      No documents
+    <% end %>
   </td>
   <td>
     <%= document.created_at.strftime("%Y-%m-%d %H:%M") %>

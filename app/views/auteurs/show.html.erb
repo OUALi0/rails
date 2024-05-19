@@ -29,9 +29,15 @@
     </div>
     <div class="d-flex w-200 mb-2">
       <div class="w-25">Docuemts :</div>
-      <div><strong><% @documents.each do |document| %>
+      <div><strong>
+        <% if @auteur.documents.any? %>
+      <% @auteur.documents.each do |document| %>
         <%= "#{document.titre}, " %>
-      <% end %></strong></div>
+      <% end %>
+      <% else %>
+        No documents
+      <% end %>
+      </strong></div>
     </div>
 	</div>
   <div class="card">

@@ -11,7 +11,7 @@
         <thead>
           <tr>
             <th scope="col">ID</th>
-            <th scope="col">Document ID</th>
+            <th scope="col">Document ISBN</th>
             <th scope="col">Titre</th>
             <th scope="col">Adherent</th>
             <th scope="col">Ajouté</th>
@@ -19,29 +19,43 @@
           </tr>
         </thead>
         <tbody>
-      <% @emprunt_documents.each do |emprunt_document| %>
+        <% @emprunts_documents.each do |emprunt| %>
         <tr>
           <th scope="row">
-            <%= emprunt_document["emprunt_id"] %>
+            <%= emprunt.id %>
           </th>
           <th scope="row">
-            <%= emprunt_document["document_id"] %>
+            <% if emprunt.documents.any? %>
+              <% emprunt.documents.each do |document| %>
+                <%= "#{document.isbn}" %>
+              <% end %>
+            <% else %>
+              No documents
+            <% end %>
           </th>
           <td>
-            <%= emprunt_document["document_name"] %>
+            <% if emprunt.documents.any? %>
+              <% emprunt.documents.each do |document| %>
+                <%= "#{document.titre}" %>
+            <% end %>
+            <% else %>
+              No documents
+            <% end %>
           </td>
-
           <td>
-            <%="#{emprunt_document["ad_nom"]} #{emprunt_document["ad_prenom"]} " %>
+            <% adherent = Adherent.find_by(id: emprunt.adherent_id) %>
+          <% if adherent %>
+            <%= adherent.nom + " " + adherent.prenom %>
+          <% else %>
+            Adherent not found
+          <% end %>
           </td>
           <td>
-            <%= Date.parse(emprunt_document["created_at"]).strftime("%Y-%m-%d %H:%M") %>
+            <%= emprunt.created_at.strftime("%Y-%m-%d %H:%M") %>
           </td>
-
           <td>
-            <%= link_to "",  emprunt_path(id:emprunt_document["emprunt_id"]), class:"btn btn-outline-primary bi bi-eye", :method => "get" %>
-          </td>
-        
+                 <%= button_to "", emprunt, class:"btn btn-outline-primary bi bi-eye", :method => "get" %>
+              </td>
           </tr>
         <% end %>
         </tbody>
@@ -60,27 +74,45 @@
               </tr>
             </thead>
             <tbody>
-          <% @emprunt_ordinateur.each do |emprunt_ordinateur| %>
-            <tr>
-              <th scope="row">
-                <%= emprunt_ordinateur["emprunt_id"] %>
-              </th>
-              <th scope="row">
-                <%= emprunt_ordinateur["materiel_id"] %>
-              </th>
-              <td>
-                <%= emprunt_ordinateur["materiel_name"] %>
-              </td>
+              <% @emprunts_materiels.each do |emprunt| %>
+              
+        <tr>
+          <th scope="row">
+
+              <%= emprunt.id %>
+          </th>
+          <th scope="row">
+            <% if emprunt.materiels.any? %>
+              <% emprunt.materiels.each do |materiel| %>
+                <%= "#{materiel.id}" %>
+              <% end %>
+            <% else %>
+              No documents
+            <% end %>
+          </th>
+          <td>
+            <% if emprunt.materiels.any? %>
+              <% emprunt.materiels.each do |materiel| %>
+                <%= "#{materiel.nom}" %>
+              <% end %>
+            <% else %>
+              No materiel
+            <% end %>
+          </td>
+          <td>
+            <% adherent = Adherent.find_by(id: emprunt.adherent_id) %>
+          <% if adherent %>
+            <%= adherent.nom + " " + adherent.prenom %>
+          <% else %>
+            Adherent not found
+          <% end %>
+          </td>
+          <td>
+            <%= emprunt.created_at.strftime("%Y-%m-%d %H:%M") %>
+          </td>
 
               <td>
-                <%="#{emprunt_ordinateur["ad_nom"]} #{emprunt_ordinateur["ad_prenom"]} " %>
-              </td>
-              <td>
-                <%= Date.parse(emprunt_ordinateur["created_at"]).strftime("%Y-%m-%d %H:%M") %>
-              </td>
-
-              <td>
-                <%= link_to "",  emprunt_path(id:emprunt_ordinateur["emprunt_id"]), class:"btn btn-outline-primary bi bi-eye", :method => "get" %>
+                 <%= button_to "", emprunt, class:"btn btn-outline-primary bi bi-eye", :method => "get" %>
               </td>
             
               </tr>
@@ -89,23 +121,29 @@
   </table>
 </div>
 <%= button_to "Export To CSV", "#", id: "exportBtn", class: "btn btn-primary", method: :get %>
-
+<br/>
 <script>
   document.getElementById("exportBtn").addEventListener("click", function() {
     // Create an array to store the CSV data
     let csvData = [];
     // Add the CSV header
-    csvData.push(["ID","DOCUMENT_NAME", "ADHERENT_NOM", "ADHERENT_PRENOM", "Created"]);
-
     // Iterate over each emprunt to get its information
-    <% if @emprunt_documents.present? %> 
-      <% @emprunt_documents.each do |emprunt_document| %>
-        csvData.push(["<%= emprunt_document["emprunt_id"] %>", "<%= emprunt_document["document_name"] %>", "<%= emprunt_document["ad_nom"] %>", "<%= emprunt_document["ad_prenom"] %>", "<%= emprunt_document["created_at"] %>"]);
+    <% @emprunts.each do |emprunt| %>
+      <% if emprunt.materiels.any? %>
+        <% emprunt.materiels.each do |materiel| %>
+          <% adherent = Adherent.find(emprunt.adherent_id) %>
+          csvData.push(["ID","Materiel_NAME", "ADHERENT_NOM", "ADHERENT_PRENOM", "Created"]);
+          csvData.push(["<%= emprunt.id %>", "<%= materiel.nom %>", "<%= adherent.nom %>", "<%= adherent.prenom %>", "<%= emprunt.created_at.strftime("%Y-%m-%d %H:%M") %>"]);
+        <% end %>
       <% end %>
     <% end %>
-    <% if @emprunt_ordinateur.present? %> 
-      <% @emprunt_ordinateur.each do |emprunt_ordinateur| %>
-        csvData.push(["<%= emprunt_ordinateur["emprunt_id"] %>", "<%= emprunt_ordinateur["materiel_name"] %>", "<%= emprunt_ordinateur["ad_nom"] %>", "<%= emprunt_ordinateur["ad_prenom"] %>", "<%= emprunt_ordinateur["created_at"] %>"]);
+    <% @emprunts.each do |emprunt| %>
+      <% if emprunt.documents.any? %>
+        <% emprunt.documents.each do |document| %>
+          <% adherent = Adherent.find(emprunt.adherent_id) %>
+          csvData.push(["ID","DOCUMENT_NAME", "ADHERENT_NOM", "ADHERENT_PRENOM", "Created"]);
+          csvData.push(["<%= emprunt.id %>", "<%= document.titre %>", "<%= adherent.nom %>", "<%= adherent.prenom %>", "<%= emprunt.created_at.strftime("%Y-%m-%d %H:%M") %>"]);
+        <% end %>
       <% end %>
     <% end %>
 

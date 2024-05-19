@@ -1,7 +1,7 @@
 <div class="section">
   <%= simple_form_for @document do |f| %>
     <div class="mr-3 w-100" >
-    <%if @is_edit%>
+      <%if @is_edit%>
       <% content_for :page_title, "Editer Un Document" %>
       <%else%>
       <% content_for :page_title, "Creer Nouveau Document" %>
@@ -22,11 +22,9 @@
         <%= f.input :isbn, input_html: { class: 'input' }, wrapper: false, label_html: { class: 'label' }  %>
       </div>
     </div><br>
-    <%if @is_edit%>
       <div class="w-100">
         <%= select_tag(:auteur_id, options_for_select( [["Selectioner un auteur", 0]] +  @auteurs.map{ |auteur| [auteur.nom_prenom, auteur.id]}), class:"custom-select form-select form-select-lg") %>
       </div><br>
-    <% end %>
     <%= f.button :submit, class: "button is-primary" %>
   <% end %>
 </div>

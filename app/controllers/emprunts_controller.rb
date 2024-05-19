@@ -1,111 +1,48 @@
 class EmpruntsController < ApplicationController
   before_action :set_emprunt, only: %i[ show edit update destroy ]
   def index
-    sql_ordinateur = "SELECT 
-      `emprunts`.`id` AS emprunt_id,
-      `materiels`.`nom` AS materiel_name,
-      `materiels`.`id` AS materiel_id,
-      `adherents`.`nom` as ad_nom, 
-      `adherents`.`prenom` ad_prenom, 
-      `emprunts`.`created_at` as created_at
-      from emprunts 
-      LEFT JOIN emprunt_materiels ON emprunts.id=`emprunt_materiels`.`emprtunt_id` 
-      LEFT JOIN materiels ON materiels.id=emprunt_materiels.materiel_id 
-      LEFT JOIN adherents ON adherents.id=emprunts.adherent_id 
-      WHERE emprunts.id NOT NULL 
-      AND `emprunt_materiels`. `materiel_id` NOT NULL
-      "
-
-    sql_document = "SELECT 
-      `emprunts`.`id` AS emprunt_id,
-      `documents`.`titre` AS document_name,
-      `documents`.`id` AS document_id,
-      `adherents`.`nom` as ad_nom, 
-      `adherents`.`prenom` ad_prenom, 
-      `emprunts`.`created_at` as created_at
-      from emprunts 
-      LEFT JOIN emprunt_documents ON emprunts.id=`emprunt_documents`.`emprtunt_id` 
-      LEFT JOIN documents ON documents.id=emprunt_documents.document_id 
-      LEFT JOIN adherents ON adherents.id=emprunts.adherent_id 
-      WHERE emprunts.id NOT NULL 
-      AND `emprunt_documents`. `document_id` NOT NULL
-      "
-    @emprunt_ordinateur = ActiveRecord::Base.connection.execute(sql_ordinateur) 
-    @emprunt_documents = ActiveRecord::Base.connection.execute(sql_document) 
-    @emprunts = Emprunt.all
-  end
-
-  def show
+    if params[:query].present?
+      @emprunts = search(params[:query])
+      @auteurs = search(params[:query])
+    else
+      @emprunts = Emprunt.includes(:materiels, :documents, :adherent).all
+      @auteurs = Auteur.includes(:documents).all
+      @emprunts_documents = Emprunt.joins(:documents).distinct
+      @emprunts_materiels = Emprunt.joins(:materiels).distinct
+      
+    end
     @materiels = Materiel.all
     @documents = Document.all
     @adherents = Adherent.all
-    id = request.url.split("/")[4]
-    sql_ordinateur = "SELECT 
-    `emprunts`.`id` AS emprunt_id,
-    `materiels`.`nom` AS materiel_name,
-    `materiels`.`id` AS materiel_id,
-    `adherents`.`nom` as ad_nom, 
-    `adherents`.`prenom` ad_prenom, 
-    `adherents`.`id` adherent_id, 
-    `emprunts`.`created_at` as created_at
-    from emprunts 
-    LEFT JOIN emprunt_materiels ON emprunts.id=`emprunt_materiels`.`emprtunt_id` 
-    LEFT JOIN materiels ON materiels.id=emprunt_materiels.materiel_id 
-    LEFT JOIN adherents ON adherents.id=emprunts.adherent_id 
-    WHERE emprunts.id=#{id} LIMIT 1
-     "
-     @is_ordinateur = true
-     @emp = ActiveRecord::Base.connection.execute(sql_ordinateur) 
-     if(@emp.nil?)
-        @is_ordinateur = false
-        sql_document = "SELECT 
-        `emprunts`.`id` AS emprunt_id,
-        `documents`.`titre` AS document_name,
-        `documents`.`id` AS document_id,
-        `adherents`.`nom` as ad_nom, 
-        `adherents`.`prenom` ad_prenom, 
-        `adherents`.`id` adherent_id, 
-        `emprunts`.`created_at` as created_at
-        from emprunts 
-        LEFT JOIN emprunt_documents ON emprunts.id=`emprunt_documents`.`emprtunt_id` 
-        LEFT JOIN documents ON documents.id=emprunt_documents.document_id 
-        LEFT JOIN adherents ON adherents.id=emprunts.adherent_id 
-        WHERE emprunts.id=#{id}
-        LIMIT 1
-        "
-        @emp = ActiveRecord::Base.connection.execute(sql_document) 
-        @is_document = true
-     end
   end
+  def show
+    @materiels = Materiel.all
+    @documents = Document.all
+    if @emprunt.adherent_id.present?
+      @adherent = Adherent.find_by(id: @emprunt.adherent_id)
+    else
+      @adherent = nil
+    end
+    if params[:document_id].present?
+      @document = Document.find(params[:document_id])
+      @emprunts = @document.emprunts
+    elsif params[:materiel_id].present?
+      @materiel = Materiel.find(params[:materiel_id])
+      @emprunts = @materiel.emprunts
+    else
+      @emprunts = [@emprunt]
+    end
+  end
+  
 
   def new
     @is_edit = false
     @adherents = Adherent.all
     @emprunt = Emprunt.new
-
-    if(params[:type].nil?)
-      return
-    end
-    if(params[:type] == 'Ordinateur')
-      @is_ordinateur = true
-      @is_document = false
-      @ordinateurs = getOrdinateurs()
-      return
-    else
-      @is_ordinateur = false
-      @is_document = true
-      @documents = getDocuments()
-    end
-  end
-
-  def getOrdinateurs()
-    ordinateur = Materiel.all.where("mat_type='Ordinateur'")
-    return ordinateur
-  end
-
-  def getDocuments()
-    documents = Document.all
-    return documents
+    @materiels = Materiel.all
+    @documents = Document.all
+    @is_ordinateur = params[:type] == 'Ordinateur'
+    @is_document = params[:type] == 'Document'
   end
 
   def edit
@@ -116,28 +53,23 @@ class EmpruntsController < ApplicationController
 
   def create
     @emprunt = Emprunt.new(emprunt_params)
-    doc_id = params[:doc_id]
-    mat_id = params[:mat_id]
-    if(mat_id.nil? && doc_id.nil?)
-      return
-    end
+    document_id = params[:document_id]
+    materiel_id = params[:materiel_id]
     respond_to do |format|
       if @emprunt.save
-        if(doc_id)
-          inserts = [@emprunt.id, Integer(doc_id)]
-          sql = "INSERT INTO emprunt_documents(emprtunt_id, document_id) VALUES(#{inserts.join(", ")})"
-          ActiveRecord::Base.connection.execute(sql) 
+        if document_id.present?
+          @document = Document.find_by(id: document_id)
+          @document.emprunts << @emprunt if @document
+          format.html { redirect_to emprunt_url(@emprunt), notice: "Emprunt was successfully created." }
+          format.json { render :show, status: :created, location: @emprunt }
+        elsif materiel_id.present?
+          @materiel = Materiel.find_by(id: materiel_id)
+          @materiel.emprunts << @emprunt if @materiel
+          format.html { redirect_to emprunt_url(@emprunt), notice: "Emprunt was successfully created." }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @emprunt.errors, status: :unprocessable_entity }
         end
-        if(mat_id)
-          inserts = [@emprunt.id, Integer(mat_id)]
-          sql = "INSERT INTO emprunt_materiels('emprtunt_id', 'materiel_id') VALUES(#{inserts.join(", ")})"
-          ActiveRecord::Base.connection.execute(sql) 
-        end
-        format.html { redirect_to emprunt_url(@emprunt), notice: "Emprunt was successfully created." }
-        format.json { render :show, status: :created, location: @emprunt }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @emprunt.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -163,13 +95,12 @@ class EmpruntsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_emprunt
       @emprunt = Emprunt.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def emprunt_params
-      params.require(:emprunt).permit(:adherent_id)
+      params.require(:emprunt).permit(:adherent_id, :document_id, :materiel_id)
     end
 end

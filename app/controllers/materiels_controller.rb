@@ -34,6 +34,27 @@ class MaterielsController < ApplicationController
       end
     end
   end
+
+  def charger_table
+    require 'csv'
+      csv_file_path = 'C:\Users\OUALID\Downloads\materiels.csv'
+      # Lecture du fichier CSV
+      CSV.foreach(csv_file_path, headers: true) do |row|
+          puts row.inspect
+      # Création d'une nouvelle instance de materiel avec les attributs du CSV
+      materiel = Materiel.new(
+          id: row['ID'],
+          mat_type: row['TYPE'],
+          nom: row['NOM']
+      )
+      # Enregistrement de l'instance en base de données
+      if materiel.save
+          puts "materiel enregistré avec succès : #{materiel.inspect}"
+      else
+          puts "Erreur lors de l'enregistrement de l'materiel : #{materiel.errors.full_messages.join(', ')}"
+      end
+      end
+  end
   def destroy
     @materiel.destroy
 
