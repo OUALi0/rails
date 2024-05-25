@@ -38,4 +38,5 @@ Rails.application.routes.draw do
   get "/searchDoc" => "documents#index", :as => :search_doc 
   get "/searchAuth" => "auteurs#index", :as => :search_auth 
 
+
 end
